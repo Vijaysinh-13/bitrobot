@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BitRobot Community Intel Check</title>
+    <style>
+        /* --- 1. RESET & BASE STYLES --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            /* System fonts for maximum reliability */
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f1f5f9; /* Light slate gray */
+            color: #0f172a; /* Dark text */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            /* Simple dotted pattern */
+            background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        /* --- 2. CARD CONTAINER --- */
+        .card {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 550px;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            border: 1px solid #e2e8f0;
+            /* Blue top border like the design */
+            border-top: 6px solid #2563eb; 
+        }
+
+        /* --- 3. TYPOGRAPHY --- */
+        h1 {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: #1e293b;
+        }
+
+        p {
+            font-size: 16px;
+            color: #64748b;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+
+        /* --- 4. BUTTONS --- */
+        .btn-primary {
+            background-color: #2563eb; /* BitRobot Blue */
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            font-size: 16px;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: background-color 0.2s;
+        }
+
+        .btn-primary:hover {
+            background-color: #1d4ed8;
+        }
+
+        /* --- 5. QUIZ OPTIONS --- */
+        .option-btn {
+            display: block;
+            width: 100%;
+            text-align: left;
+            background-color: #ffffff;
+            border: 2px solid #e2e8f0;
+            padding: 16px;
+            margin-bottom: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            color: #334155;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .option-btn:hover {
+            border-color: #2563eb;
+            background-color: #f8fafc;
+        }
+
+        /* Correct/Incorrect States */
+        .correct {
+            background-color: #dcfce7 !important;
+            border-color: #10b981 !important;
+            color: #064e3b !important;
+        }
+
+        .incorrect {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #7f1d1d !important;
+        }
+
+        /* --- 6. UTILITIES --- */
+        .hidden {
+            display: none !important;
+        }
+
+        .score-display {
+            font-size: 60px;
+            font-weight: 800;
+            color: #2563eb;
+            margin: 20px 0;
+        }
+
+        .progress-text {
+            font-size: 14px;
+            font-weight: 700;
+            color: #94a3b8;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: block;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <div id="screen-start">
+            <h1>BitRobot Intel Check 🤖</h1>
+            <p>Prove your knowledge of Subnets, DePIN, and the Grand Challenges. Are you ready to contribute?</p>
+            <button class="btn-primary" onclick="startQuiz()">Initialize Quiz_</button>
+        </div>
+
+        <div id="screen-quiz" class="hidden">
+            <span id="progress-text" class="progress-text">Question 1 / 7</span>
+            <h2 id="question-text" style="font-size: 20px; font-weight: 700; margin-bottom: 24px; text-align: left;">Loading...</h2>
+            <div id="options-container">
+                </div>
+        </div>
+
+        <div id="screen-result" class="hidden">
+            <h1>Diagnostic Complete</h1>
+            <div class="score-display"><span id="final-score">0</span>/7</div>
+            <p id="result-message">Calculating...</p>
+            <button class="btn-primary" onclick="restartQuiz()">Re-run Diagnostic_</button>
+        </div>
+    </div>
+
+    <script>
+        // --- DATA ---
+        // This is the exact content you requested
+        const quizData = [
+            {
+                question: "What is the primary 'bottleneck' in Embodied AI that BitRobot solves?",
+                options: ["Processor Speed", "Real-World Data Scarcity", "Electricity Costs", "Lack of Developers"],
+                correctIndex: 1
+            },
+            {
+                question: "Which blockchain does BitRobot use for high speed and low latency?",
+                options: ["Ethereum", "Bitcoin", "Solana", "Cardano"],
+                correctIndex: 2
+            },
+            {
+                question: "What is the purpose of a 'Subnet' in the ecosystem?",
+                options: ["Crypto Mining", "Organizing specialized tasks & rewards", "Social Networking", "File Storage"],
+                correctIndex: 1
+            },
+            {
+                question: "Which Grand Challenge pits humans vs AI in autonomous navigation?",
+                options: ["Robotic Origami", "Earth Rover", "IKEA Assembly", "Deep Blue Chess"],
+                correctIndex: 1
+            },
+            {
+                question: "How can you contribute to SN/05 (SeeSaw) without a robot?",
+                options: ["Coding Rust", "Buying a Robot Arm", "Recording iPhone Video Tasks", "3D Printing"],
+                correctIndex: 2
+            },
+            {
+                question: "What does 'DePIN' stand for?",
+                options: ["Decentralized Private Internet", "Decentralized Physical Infrastructure Network", "Deep Protocol Interface", "Digital Public Node"],
+                correctIndex: 1
+            },
+            {
+                question: "Who defines the goals and rewards for a specific Subnet?",
+                options: ["Robot Manufacturers", "Token Investors", "Subnet Owners", "Discord Mods"],
+                correctIndex: 2
+            }
+        ];
+
+        // --- STATE VARIABLES ---
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let isAnsweringLocked = false;
+
+        // --- DOM ELEMENTS ---
+        const screenStart = document.getElementById('screen-start');
+        const screenQuiz = document.getElementById('screen-quiz');
+        const screenResult = document.getElementById('screen-result');
+        
+        const questionTextEl = document.getElementById('question-text');
+        const progressTextEl = document.getElementById('progress-text');
+        const optionsContainerEl = document.getElementById('options-container');
+        const finalScoreEl = document.getElementById('final-score');
+        const resultMessageEl = document.getElementById('result-message');
+
+        // --- FUNCTIONS ---
+
+        function startQuiz() {
+            // Hide Start, Show Quiz
+            screenStart.classList.add('hidden');
+            screenQuiz.classList.remove('hidden');
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            // Reset lock for new question
+            isAnsweringLocked = false;
+            
+            // Get current question data
+            const currentData = quizData[currentQuestionIndex];
+
+            // Update Text
+            questionTextEl.textContent = currentData.question;
+            progressTextEl.textContent = "Question " + (currentQuestionIndex + 1) + " / " + quizData.length;
+
+            // Clear old buttons
+            optionsContainerEl.innerHTML = '';
+
+            // Generate new buttons
+            currentData.options.forEach(function(optionText, index) {
+                const button = document.createElement('button');
+                button.textContent = optionText;
+                button.className = 'option-btn';
+                
+                // Add click event
+                button.onclick = function() {
+                    handleAnswer(index, button, currentData.correctIndex);
+                };
+
+                optionsContainerEl.appendChild(button);
+            });
+        }
+
+        function handleAnswer(selectedIndex, selectedButton, correctIndex) {
+            if (isAnsweringLocked) return; // Stop double clicks
+            isAnsweringLocked = true;
+
+            const allButtons = optionsContainerEl.querySelectorAll('.option-btn');
+
+            if (selectedIndex === correctIndex) {
+                // Correct
+                selectedButton.classList.add('correct');
+                score++;
+            } else {
+                // Incorrect
+                selectedButton.classList.add('incorrect');
+                // Highlight the correct one so they learn
+                allButtons[correctIndex].classList.add('correct');
+            }
+
+            // Wait 1 second then go to next
+            setTimeout(function() {
+                nextQuestion();
+            }, 1000);
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            
+            if (currentQuestionIndex < quizData.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            screenQuiz.classList.add('hidden');
+            screenResult.classList.remove('hidden');
+            
+            finalScoreEl.textContent = score;
+
+            if (score === 7) {
+                resultMessageEl.textContent = "Perfect score! You are ready to build. 🦾";
+            } else if (score >= 5) {
+                resultMessageEl.textContent = "Good job! You know the mission. 🚀";
+            } else {
+                resultMessageEl.textContent = "Check the whitepaper and try again! 📚";
+            }
+        }
+
+        function restartQuiz() {
+            score = 0;
+            currentQuestionIndex = 0;
+            screenResult.classList.add('hidden');
+            screenStart.classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
